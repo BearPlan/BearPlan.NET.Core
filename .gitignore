@@ -1,0 +1,21 @@
+## .NET 编译产物
+bin/
+obj/
+*.user
+*.suo
+*.userprefs
+*.cache
+
+## ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+
+## Visual Studio
+.vs/
+*.vspx
+*.psess
+*.vsp
+*.sap
+
+## 编译生成的 XML 文档
+*.xml
