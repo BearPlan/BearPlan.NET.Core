@@ -32,6 +32,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="Fonts\**\*.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <TargetPath>Fonts\%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="\" />
     <None Include="LICENSE" Pack="true" PackagePath="\" />
   </ItemGroup>
