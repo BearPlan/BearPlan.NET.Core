@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using BearPlan.Core.Extensions;
 using SixLabors.Fonts;
@@ -16,6 +17,22 @@ public static class SixLaborsImageHelper
         Color.Black, Color.Red, Color.Blue, Color.Green, Color.Orange, Color.Brown,
         Color.Brown, Color.DarkBlue
     };
+
+    // SixLabors.Fonts 2.x 的 SystemFonts 只扫描系统已安装字体，Linux 容器默认无 Arial 也无 Roboto，
+    // 会导致 SystemFonts.Families 为空，调用 .First() 直接抛 Sequence contains no elements。
+    // 这里改为在首次使用时显式加载项目打包的 Roboto 字体（csproj 中 Content 拷贝到 bin/Fonts/ 下），
+    // 保证跨平台一致可用。FontCollection 是进程级单例，重复 Add 同一文件会抛异常，故用 Lazy 保证只初始化一次。
+    private static readonly Lazy<FontFamily> DefaultFontFamily = new(() =>
+    {
+        var collection = new FontCollection();
+        var basePath = Path.Combine(AppContext.BaseDirectory, "Fonts");
+        // 优先用 Bold 字重的静态 Roboto（视觉清晰），找不到时回退可变字体
+        var boldPath = Path.Combine(basePath, "Roboto", "static", "Roboto-Bold.ttf");
+        var variablePath = Path.Combine(basePath, "Roboto", "Roboto-VariableFont_wdth,wght.ttf");
+        return File.Exists(boldPath)
+            ? collection.Add(boldPath)
+            : collection.Add(variablePath);
+    });
 
     private static readonly char[] Chars =
     {
@@ -105,11 +122,8 @@ public static class SixLaborsImageHelper
         int mathResult = 0; //结果
         var r = new Random();
         using var image = new Image<Rgba32>(width, height);
-        // 字体列表 SystemFonts.Families
-        var family = SystemFonts.Families.FirstOrDefault(x => x.Name == "Arial").Name;
-        var font = SystemFonts.CreateFont(
-            name: family.IsNull() ? SystemFonts.Families.First().Name : family,
-            fontSize, FontStyle.Bold);
+        // 显式从打包的 Roboto 字体创建指定字号实例（不依赖系统字体，避免 Linux 容器字体缺失导致集合为空）
+        var font = DefaultFontFamily.Value.CreateFont(fontSize, FontStyle.Bold);
         image.Mutate(ctx =>
         {
             ////生成3个10以内的整数，用来运算

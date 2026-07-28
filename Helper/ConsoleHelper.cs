@@ -42,8 +42,6 @@ public static class ConsoleHelper
     private static readonly string TrueColor = "\x1b[32m";
     private static readonly string FalseColor = "\x1b[31m";
 
-    #region 有框面板（本地 Dev 使用）
-
     /// <summary>
     /// 以 2×2 四象限面板形式打印配置信息。
     /// 上半部为"品牌带"：左格放 <paramref name="logoLines"/>（居中），右格放 <paramref name="brandLines"/>。
@@ -185,57 +183,6 @@ public static class ConsoleHelper
     private static string BorderLine(string left, string mid, string right, int leftInner, int rightInner, string color)
         => $"{color}{left}{new string('─', leftInner + 2)}{mid}{new string('─', rightInner + 2)}{right}{AnsiReset()}";
 
-    #endregion 有框面板（本地 Dev 使用）
-
-    #region 无框逐行（服务器 / docker logs 使用）
-
-    /// <summary>
-    /// 逐行打印配置信息，无边框、无多列对齐，兼容所有终端（含 docker logs）。
-    /// 先输出 <paramref name="headerLines"/>（强调色，常用于框架名/版本），空一行，
-    /// 再依次输出每个分组：标题（▸ 标题，强调色）+ 键值行（键右对齐到组内最长键 + ": " + 值，
-    /// 值按 True/False 着色），组间空一行分隔。
-    /// </summary>
-    public static void PrintConfigLines(
-        IReadOnlyList<string> headerLines,
-        IReadOnlyList<ConfigSection> sections)
-    {
-        headerLines ??= Array.Empty<string>();
-        sections ??= Array.Empty<ConfigSection>();
-
-        var sw = new StringWriter();
-        void Emit(string s) => sw.WriteLine(s);
-
-        // 头部信息：强调色逐行输出，结束后空一行
-        foreach (var line in headerLines)
-            Emit($"{AccentColor}{line}{AnsiReset()}");
-        if (headerLines.Count > 0)
-            Emit("");
-
-        // 分组：标题 + 键值行，组间空一行
-        bool first = true;
-        foreach (var section in sections)
-        {
-            if (!first)
-                Emit("");
-            first = false;
-
-            Emit($"{AccentColor}▸ {section.Title}{AnsiReset()}");
-
-            // 组内最长键用于右对齐，让冒号在同列，阅读更整齐
-            int keyW = section.Items.Count == 0 ? 0 : section.Items.Keys.Max(GetStringRealLength);
-            foreach (var kv in section.Items)
-            {
-                string keyPart = PadLeft(kv.Key, keyW);
-                string valColor = kv.Value is "True" ? TrueColor : kv.Value is "False" ? FalseColor : MutedColor;
-                Emit($"  {MutedColor}{keyPart}{AnsiReset()}: {valColor}{kv.Value}{AnsiReset()}");
-            }
-        }
-
-        Console.Write(sw.ToString());
-    }
-
-    #endregion 无框逐行（服务器 / docker logs 使用）
-
     // ---------- 宽度/对齐计算 ----------
 
     private static int SectionsMaxKeyWidth(IReadOnlyList<ConfigSection> sections)
@@ -310,12 +257,6 @@ public static class ConsoleHelper
     {
         int diff = width - GetStringRealLength(s ?? string.Empty);
         return (s ?? string.Empty) + (diff > 0 ? new string(' ', diff) : string.Empty);
-    }
-
-    private static string PadLeft(string s, int width)
-    {
-        int diff = width - GetStringRealLength(s ?? string.Empty);
-        return (diff > 0 ? new string(' ', diff) : string.Empty) + (s ?? string.Empty);
     }
 
     private static string PadCenter(string s, int width)
