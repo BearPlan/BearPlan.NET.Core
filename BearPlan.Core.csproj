@@ -66,11 +66,4 @@
     <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="10.0.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="Fonts\**\*.ttf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <TargetPath>Fonts\%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
-    </Content>
-  </ItemGroup>
-
 </Project>
