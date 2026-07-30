@@ -87,7 +87,7 @@ namespace BearPlan.Core.Model
             {
                 code = code,
                 msg = msg,
-                success = true,
+                success = success,
                 data = data
             };
         }
