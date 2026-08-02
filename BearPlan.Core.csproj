@@ -6,7 +6,7 @@
 
     <!--NuGet 打包信息-->
     <PackageId>BearPlan.Core</PackageId>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
     <Authors>BearPlan</Authors>
     <Owners>BearPlan</Owners>
     <Product>BearPlan.Core</Product>
