@@ -21,15 +21,13 @@ public class NotFoundMiddleware
         {
             // 设置ContentType
             context.Response.ContentType = "application/json";
-            await context.Response.WriteAsync(new ActionResultVm
+            await context.Response.WriteAsync(ExcutedResult<object>.FailedResult(data: new
             {
                 Status = StatusCodes.Status404NotFound,
                 ActionError = new ActionError(),
                 Message = "The request failed. The access interface does not exist.",
                 Path = context.Request.Path.Value?.ToLower()
-            }.ToJson());
+            }, code: StatusCodes.Status404NotFound).ToJson());
         }
-
-        // // 继续处理请求
     }
 }

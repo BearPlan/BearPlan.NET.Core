@@ -4,6 +4,7 @@ using BearPlan.Core.Global;
 using BearPlan.Core.MultiLanguage.Contract;
 using BearPlan.Core.Caches;
 using BearPlan.Core.Internal;
+using BearPlan.Core.WebApp;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -59,6 +60,11 @@ public static class App
     /// 多语言
     /// </summary>
     public static ILocalizationService L => GetService<ILocalizationService>();
+
+    /// <summary>
+    /// 当前请求用户上下文（基于 JWT claim 解析，非 Web 请求上下文或未登录时为 null）
+    /// </summary>
+    public static IHttpUser HttpUser => GetService<IHttpUser>();
 
     /// <summary>
     /// 未托管的对象集合

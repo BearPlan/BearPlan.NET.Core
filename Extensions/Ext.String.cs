@@ -623,6 +623,6 @@ public static partial class ExtObject
 
     public static bool IsPhone(this string str)
     {
-        return Regex.IsMatch(str, @"^[1]+[3,5]+\d{9}");
+        return Regex.IsMatch(str, @"^[1]+[3-9]+\d{9}");
     }
 }

@@ -143,5 +143,10 @@ public class AuthConstants
         public const string RefreshTime = "refresh_time ";
 
         public const string ApiVersion = "api-version";
+
+        /// <summary>
+        /// 设备ID，标识同一用户的同一台设备，用于多端在线区分与定向推送
+        /// </summary>
+        public const string DeviceId = "device_id";
     }
 }

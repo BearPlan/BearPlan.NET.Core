@@ -13,6 +13,13 @@ public interface IRedisSubscriber
     Task SubscribeAsync(string channel, Action<string> onMessage);
 
     /// <summary>
+    /// 退订指定通道的指定回调（按回调实例匹配；通道最后一个回调移除后才真正取消 Redis 订阅）
+    /// </summary>
+    /// <param name="channel">通道名称</param>
+    /// <param name="onMessage">SubscribeAsync 时传入的同一回调实例</param>
+    Task UnsubscribeAsync(string channel, Action<string> onMessage);
+
+    /// <summary>
     /// 向指定通道发布消息
     /// </summary>
     /// <param name="channel">通道名称</param>
