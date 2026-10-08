@@ -10,10 +10,10 @@ namespace BearPlan.Core.Entity
     where TKey : struct, IEquatable<TKey>
     {
         /// <summary>
-        /// 创建者名称
+        /// 创建者ID（恒为平台用户ID，固定 long，不随主键类型）
         /// </summary>
         [SugarColumn(IsNullable = true)]
-        public string CreateBy { get; set; } = string.Empty;
+        public long? CreateId { get; set; }
 
         /// <summary>
         /// 创建时间
